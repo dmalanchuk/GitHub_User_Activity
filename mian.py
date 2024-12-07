@@ -17,4 +17,6 @@ GitHub як аргумент, отримати останню активніст
 def configure():
     load_dotenv()
     
-    
+
+def github_activity(username):
+    pass
