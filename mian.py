@@ -1,17 +1,7 @@
 import os
+import json
+import http.client
 from dotenv import load_dotenv
-
-"""
-У цьому проєкті ви створите простий інтерфейс командного рядка (CLI), щоб отримати останню активність користувача 
-GitHub і відобразити її в терміналі. 
-Цей проєкт допоможе вам практикувати свої навички програмування, включаючи роботу з API, 
-обробку даних JSON та створення простого додатка CLI.
-
-Вимоги
-
-Додаток повинен працювати з командного рядка, приймати ім'я користувача 
-GitHub як аргумент, отримати останню активність користувача за допомогою GitHub API та відображати його в терміналі.
-"""
 
 # os.getenv('api_key')
 def configure():
@@ -19,4 +9,29 @@ def configure():
     
 
 def github_activity(username):
-    pass
+    username = input('enter username: ')
+    try:
+        username = str(username)
+    except ValueError as ve:
+        print(f'incorrect value: {ve}')
+        
+        
+    try:
+        connection = http.client.HTTPConnection('api.github.com')
+        
+        endpoint = f'/users/{username}/events'
+        connection.request('GET', endpoint)
+        
+        response = connection.getresponse()
+        if response.status == 404:
+            print(f'user: {username} not found')
+            return
+        elif response.status != 200:
+            print(f'failed to fetch data. HTTP status: {response.status}')
+                
+    except Exception as e:
+        print(f'error : {e}')
+
+
+if __name__ == '__main__':
+    github_activity('dmalanchuk')
